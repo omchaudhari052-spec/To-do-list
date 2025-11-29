@@ -1,0 +1,126 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class ToDoApp {
+
+    // Inner class to represent a Task
+    static class Task {
+        private String title;
+        private boolean isCompleted;
+
+        public Task(String title) {
+            this.title = title;
+            this.isCompleted = false;
+        }
+
+        public void markCompleted() {
+            this.isCompleted = true;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public boolean isCompleted() {
+            return isCompleted;
+        }
+
+        @Override
+        public String toString() {
+            String status = isCompleted ? "[DONE]" : "[PENDING]";
+            return status + " " + title;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Task> tasks = new ArrayList<>();
+
+        int choice;
+
+        do {
+            System.out.println("\n===== TO-DO LIST APPLICATION =====");
+            System.out.println("1. Add Task");
+            System.out.println("2. Show All Tasks");
+            System.out.println("3. Mark Task as Completed");
+            System.out.println("4. Delete Task");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+
+            // Handle non-integer input safely
+            while (!scanner.hasNextInt()) {
+                System.out.print("Please enter a valid number (1-5): ");
+                scanner.next();
+            }
+            choice = scanner.nextInt();
+            scanner.nextLine();  // consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter task title: ");
+                    String title = scanner.nextLine();
+                    tasks.add(new Task(title));
+                    System.out.println("✅ Task added!");
+                    break;
+
+                case 2:
+                    if (tasks.isEmpty()) {
+                        System.out.println("No tasks available.");
+                    } else {
+                        System.out.println("\nYour Tasks:");
+                        for (int i = 0; i < tasks.size(); i++) {
+                            System.out.println((i + 1) + ". " + tasks.get(i));
+                        }
+                    }
+                    break;
+
+                case 3:
+                    if (tasks.isEmpty()) {
+                        System.out.println("No tasks to mark as completed.");
+                    } else {
+                        System.out.println("Enter task number to mark as completed:");
+                        for (int i = 0; i < tasks.size(); i++) {
+                            System.out.println((i + 1) + ". " + tasks.get(i));
+                        }
+                        int completeIndex = scanner.nextInt();
+                        if (completeIndex >= 1 && completeIndex <= tasks.size()) {
+                            tasks.get(completeIndex - 1).markCompleted();
+                            System.out.println("✅ Task marked as completed!");
+                        } else {
+                            System.out.println("Invalid task number.");
+                        }
+                    }
+                    break;
+
+                case 4:
+                    if (tasks.isEmpty()) {
+                        System.out.println("No tasks to delete.");
+                    } else {
+                        System.out.println("Enter task number to delete:");
+                        for (int i = 0; i < tasks.size(); i++) {
+                            System.out.println((i + 1) + ". " + tasks.get(i));
+                        }
+                        int deleteIndex = scanner.nextInt();
+                        if (deleteIndex >= 1 && deleteIndex <= tasks.size()) {
+                            Task removed = tasks.remove(deleteIndex - 1);
+                            System.out.println("🗑️ Deleted: " + removed.getTitle());
+                        } else {
+                            System.out.println("Invalid task number.");
+                        }
+                    }
+                    break;
+
+                case 5:
+                    System.out.println("Exiting... Bye!");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Please enter 1-5.");
+            }
+
+        } while (choice != 5);
+
+        scanner.close();
+    }
+}
